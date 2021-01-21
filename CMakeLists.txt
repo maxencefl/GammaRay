@@ -345,22 +345,9 @@ endif()
 #
 # Finding Qt
 #
-find_package(Qt6Core 6.0 NO_MODULE)
-if (TARGET Qt6::Core)
-    message("Qt6 found!")
-    set(_qt_main_package Qt6)
-    find_package(Qt6Core 6.0 NO_MODULE REQUIRED)
-    set_package_properties(Qt6Core PROPERTIES TYPE REQUIRED)
-    add_definitions(-DGAMMARAY_QT6_TODO)
-else()
-    message("Qt5 found!")
-    set(_qt_main_package Qt5)
-    find_package(Qt5Core 5.5 NO_MODULE REQUIRED)
-    set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
-endif()
-
-find_package(${_qt_main_package} NO_MODULE REQUIRED COMPONENTS Gui Network)
-find_package(${_qt_main_package} NO_MODULE QUIET OPTIONAL_COMPONENTS
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network Sql REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} 5.5.0 NO_MODULE REQUIRED COMPONENTS Gui Network)
+find_package(Qt${QT_VERSION_MAJOR} 5.5.0 NO_MODULE QUIET OPTIONAL_COMPONENTS
   3DAnimation
   3DExtras
   3DInput
@@ -385,6 +372,10 @@ find_package(${_qt_main_package} NO_MODULE QUIET OPTIONAL_COMPONENTS
   Widgets
   WaylandCompositor
 )
+
+if (TARGET Qt6::Core)
+ add_definitions(-DGAMMARAY_QT6_TODO)
+endif ()
 
 set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
 if(APPLE)
